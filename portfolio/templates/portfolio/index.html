@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ikram Hamid — Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--cream:#F5F0E8;--ink:#1A1208;--amber:#D4820A;--amber-l:#F0A830;--amber-pale:#FDF3DC;--rust:#C0421A;--sage:#4A6741;--slate:#3D4A5C;}
+    *{box-sizing:border-box;}
+    body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+    .serif{font-family:'DM Serif Display',serif;}
+    .mono{font-family:'DM Mono',monospace;}
+
+    /* noise */
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity:.5;}
+
+    /* NAV */
+    nav{background:rgba(245,240,232,0.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,130,10,0.18);}
+    .nav-link{position:relative;font-weight:500;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;padding:4px 0;transition:color .2s;color:var(--ink);font-family:'DM Mono',monospace;}
+    .nav-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:var(--amber);transition:width .3s ease;}
+    .nav-link:hover{color:var(--amber);}
+    .nav-link:hover::after{width:100%;}
+
+    /* hamburger */
+    .ham-line{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s ease;}
+    #mobile-menu{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+    #mobile-menu.open{max-height:400px;}
+
+    /* HERO */
+    .hero-bg{background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(212,130,10,.12) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 10% 80%,rgba(192,66,26,.07) 0%,transparent 60%),var(--cream);}
+    .hero-name{font-family:'DM Serif Display',serif;font-size:clamp(3rem,10vw,8rem);line-height:.95;letter-spacing:-.02em;color:var(--ink);}
+    .hero-name em{font-style:italic;color:var(--amber);}
+
+    .badge{display:inline-flex;align-items:center;gap:6px;background:var(--amber-pale);border:1px solid rgba(212,130,10,.3);color:var(--amber);font-family:'DM Mono',monospace;font-size:.7rem;padding:4px 12px;border-radius:999px;font-weight:500;}
+
+    .btn-primary{background:var(--ink);color:var(--cream);font-weight:600;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;padding:13px 28px;border-radius:4px;transition:all .25s;position:relative;overflow:hidden;border:none;cursor:pointer;}
+    .btn-primary::after{content:'';position:absolute;inset:0;background:var(--amber);transform:translateY(100%);transition:transform .3s ease;z-index:0;}
+    .btn-primary:hover::after{transform:translateY(0);}
+    .btn-primary span{position:relative;z-index:1;}
+    .btn-outline{border:1.5px solid var(--ink);color:var(--ink);font-weight:600;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;padding:12px 28px;border-radius:4px;transition:all .25s;background:transparent;cursor:pointer;}
+    .btn-outline:hover{background:var(--ink);color:var(--cream);}
+
+    .stat-box{background:white;border:1px solid rgba(26,18,8,.08);border-radius:12px;padding:16px 20px;text-align:center;}
+    .stat-num{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--amber);line-height:1;}
+    .stat-lbl{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-top:4px;}
+
+    /* SECTIONS */
+    .section-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px;}
+    .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(212,130,10,.4),transparent);max-width:80px;}
+    .section-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;color:var(--ink);}
+
+    /* CARDS */
+    .project-card{background:white;border:1px solid rgba(26,18,8,.08);border-radius:12px;padding:24px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;}
+    .project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--rust));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+    .project-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(26,18,8,.1);border-color:rgba(212,130,10,.25);}
+    .project-card:hover::before{transform:scaleX(1);}
+
+    .tech-pill{font-family:'DM Mono',monospace;font-size:.65rem;background:var(--amber-pale);color:var(--amber);border:1px solid rgba(212,130,10,.25);padding:2px 9px;border-radius:999px;white-space:nowrap;}
+
+    /* TIMELINE */
+    .timeline-line{position:absolute;left:16px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--amber),transparent);}
+    .timeline-dot{width:10px;height:10px;background:var(--amber);border:2px solid var(--cream);border-radius:50%;box-shadow:0 0 0 2px var(--amber);flex-shrink:0;}
+    .exp-card{background:white;border:1px solid rgba(26,18,8,.06);border-radius:12px;padding:24px;transition:box-shadow .3s;}
+    .exp-card:hover{box-shadow:0 8px 40px rgba(26,18,8,.08);}
+
+    .skill-cat-title{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--slate);padding-bottom:7px;border-bottom:1px solid rgba(26,18,8,.08);margin-bottom:12px;}
+    .skill-pill{background:white;border:1px solid rgba(238, 30, 30, 0.1);border-radius:7px;padding:6px 14px;font-size:.82rem;font-weight:500;transition:all .2s;cursor:default;}
+    .skill-pill:hover{background:var(--amber-pale);border-color:var(--amber);color:var(--amber);}
+
+    .cert-card{background:white;border:1px solid rgba(157, 47, 25, 0.07);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start;transition:all .25s;overflow: visible;}
+    .cert-card:hover{border-color:var(--amber);box-shadow:0 8px 30px rgba(212,130,10,.1);transform:translateX(4px);background-color: #07f0aa;color: rgb(179, 119, 231);}
+    .cert-icon{width:46px;height:46px;background:var(--amber-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+
+    /* CONTACT */
+    .contact-bg{background:var(--ink);position:relative;overflow:hidden;}
+    .contact-bg::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(212,130,10,.15),transparent 60%);pointer-events:none;}
+    .input-field{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:13px 16px;color:var(--cream);font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
+    .input-field::placeholder{color:rgba(245,240,232,.3);}
+    .input-field:focus{border-color:var(--amber);}
+    .input-label{display:block;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:6px;}
+    .ci-item{display:flex;align-items:center;gap:12px;color:rgba(245,240,232,.65);font-size:.88rem;transition:color .2s;}
+    .ci-item:hover{color:var(--amber-l);}
+    .ci-icon{width:34px;height:34px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .afu1{animation:fadeUp .7s ease forwards;}
+    .afu2{animation:fadeUp .7s .12s ease forwards;opacity:0;}
+    .afu3{animation:fadeUp .7s .24s ease forwards;opacity:0;}
+    .afu4{animation:fadeUp .7s .36s ease forwards;opacity:0;}
+    .afu5{animation:fadeUp .7s .48s ease forwards;opacity:0;}
+    .float{animation:float 4s ease-in-out infinite;}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* TOAST */
+    #toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--cream);padding:12px 22px;border-radius:8px;font-size:.82rem;z-index:9999;border-left:4px solid var(--amber);transform:translateY(70px);opacity:0;transition:all .3s;pointer-events:none;max-width:90vw;}
+    #toast.show{transform:translateY(0);opacity:1;}
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-track{background:var(--cream);}
+    ::-webkit-scrollbar-thumb{background:var(--amber);border-radius:3px;}
+
+
+    .cert-thumb-wrap {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+}
+.cert-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border: 1px solid rgba(26,18,8,.1);
+  cursor: zoom-in;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: left bottom;
+}
+.cert-thumb-wrap:hover .cert-thumb {
+  transform: scale(10);
+  border: 2px solid rgb(248, 217, 167);
+  background: #df848428;
+  z-index: 9999;
+  position: relative;
+}
+  </style>
+</head>
+<body class="relative">
+
+<!-- ── NAV ── -->
+<nav class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-14 sm:h-16 flex items-center justify-between">
+    <a href="#" class="serif text-xl" style="color:var(--amber);">IH<em style="color:var(--rust);font-style:italic;">.</em></a>
+
+    <!-- Desktop -->
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#about"      class="nav-link">About</a>
+      <a href="#projects"   class="nav-link">Projects</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#skills"     class="nav-link">Skills</a>
+      <a href="#certs"      class="nav-link">Certs</a>
+      <a href="#contact"    class="nav-link">Contact</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="ham-btn" class="md:hidden flex flex-col gap-[5px] p-2" onclick="toggleMobile()" aria-label="Menu">
+      <span class="ham-line" id="hl1"></span>
+      <span class="ham-line" id="hl2"></span>
+      <span class="ham-line" id="hl3"></span>
+    </button>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div id="mobile-menu" style="background:rgba(245,240,232,.97);border-top:1px solid rgba(212,130,10,.15);">
+    <div class="flex flex-col px-6 py-4 gap-4">
+      <a href="#about"      class="nav-link text-sm" onclick="toggleMobile()">About</a>
+      <a href="#projects"   class="nav-link text-sm" onclick="toggleMobile()">Projects</a>
+      <a href="#experience" class="nav-link text-sm" onclick="toggleMobile()">Experience</a>
+      <a href="#skills"     class="nav-link text-sm" onclick="toggleMobile()">Skills</a>
+      <a href="#certs"      class="nav-link text-sm" onclick="toggleMobile()">Certs</a>
+      <a href="#contact"    class="nav-link text-sm" onclick="toggleMobile()">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero-bg min-h-screen flex items-center pt-14 sm:pt-16 relative overflow-hidden">
+  <div class="absolute" style="width:400px;height:400px;top:-80px;right:-60px;border-radius:50%;background:radial-gradient(circle,rgba(212,130,10,.15),transparent 70%);pointer-events:none;"></div>
+  <div class="absolute hidden sm:block top-28 right-8 md:right-20 mono text-xs float select-none" style="color:rgba(212,130,10,.4);">
+    <div>&lt;backend dev /&gt;</div>
+    <div style="margin-top:8px;padding-left:16px;">+ LLM integration</div>
+    <div style="margin-top:4px;padding-left:8px;">→ REST APIs</div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28 w-full">
+    <div class="max-w-3xl">
+      <div class="badge afu1 inline-flex mb-6 sm:mb-8">
+        <span style="width:7px;height:7px;background:var(--sage);border-radius:50%;display:inline-block;"></span>
+        Available for opportunities · Chennai, India
+      </div>
+      <h1 class="hero-name afu2 mb-3 sm:mb-4">Ikram&nbsp;<em>Hamid</em></h1>
+      <p class="mono afu3 mb-5 text-xs sm:text-sm" style="color:var(--slate);letter-spacing:.07em;">// Backend Engineer · AI-Powered Applications · REST API Architect</p>
+      <p class="afu4 text-base sm:text-lg leading-relaxed mb-8 max-w-xl" style="color:var(--slate);">
+        Computer Science undergraduate building scalable backend systems, integrating LLMs, and crafting full-stack applications that actually solve problems.
+      </p>
+      <div class="afu5 flex flex-wrap gap-3 mb-10 sm:mb-14">
+        <a href="#projects"><button class="btn-primary"><span>View Projects</span></button></a>
+        <a href="#contact"><button class="btn-outline">Get in Touch</button></a>
+        <a href="https://github.com/ikramhamid2003" target="_blank"><button class="btn-outline" style="border-color:rgba(26,18,8,.25);">GitHub ↗</button></a>
+      </div>
+      <div class="afu5 grid grid-cols-3 gap-3 max-w-xs sm:max-w-sm">
+        <div class="stat-box"><div class="stat-num">5+</div><div class="stat-lbl">Projects</div></div>
+        <div class="stat-box"><div class="stat-num">2</div><div class="stat-lbl">Internships</div></div>
+        <div class="stat-box"><div class="stat-num">7.56</div><div class="stat-lbl">CGPA</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="py-20 sm:py-28 max-w-6xl mx-auto px-5 sm:px-8">
+  <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
+    <div>
+      <div class="section-label mb-4">About Me</div>
+      <h2 class="section-title mb-5">Engineering ideas<br/><em style="color:var(--amber);font-style:italic;">into reality</em></h2>
+      <p class="leading-relaxed mb-4 text-sm sm:text-base" style="color:var(--slate);">
+        I'm a final-year CS student at <strong style="color:var(--ink);">Aalim Muhammed Salegh College of Engineering</strong>, Chennai, focused on backend development and AI-powered applications.
+      </p>
+      <p class="leading-relaxed mb-8 text-sm sm:text-base" style="color:var(--slate);">
+        My stack revolves around <strong style="color:var(--ink);">Django REST Framework</strong>, <strong style="color:var(--ink);">PostgreSQL</strong>, and React/Tailwind. I've shipped full-stack products from zero — REST APIs, LLM integrations, AR apps — and love the intersection of clean architecture and practical AI.
+      </p>
+      <div class="flex flex-col gap-2">
+        <a href="mailto:ikramhamid4567@gmail.com" class="ci-item" style="color:var(--ink);">
+          <span>📧</span><span class="text-sm">ikramhamid4567@gmail.com</span>
+        </a>
+        <a href="tel:+919514729395" class="ci-item" style="color:var(--ink);">
+          <span>📞</span><span class="text-sm">+91 95147 29395</span>
+        </a>
+        <div class="ci-item" style="color:var(--ink);">
+          <span>📍</span><span class="text-sm">Chennai, Tamil Nadu, India</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-5">
+      {% for cat, skill_list in skill_categories.items %}
+      <div class="reveal">
+        <div class="skill-cat-title">{{ cat }}</div>
+        <div class="flex flex-wrap gap-2">{% for s in skill_list %}<span class="skill-pill">{{ s.name }}</span>{% endfor %}</div>
+      </div>
+      {% empty %}
+      <div><div class="skill-cat-title">Languages</div><div class="flex flex-wrap gap-2"><span class="skill-pill">Python</span><span class="skill-pill">JavaScript</span><span class="skill-pill">Java</span><span class="skill-pill">C</span></div></div>
+      <div><div class="skill-cat-title">Backend</div><div class="flex flex-wrap gap-2"><span class="skill-pill">Django REST Framework</span><span class="skill-pill">REST APIs</span><span class="skill-pill">API Design</span></div></div>
+      <div><div class="skill-cat-title">AI / ML</div><div class="flex flex-wrap gap-2"><span class="skill-pill">LLM Integration</span><span class="skill-pill">Prompt Engineering</span><span class="skill-pill">Groq API</span><span class="skill-pill">scikit-learn</span></div></div>
+      <div><div class="skill-cat-title">Frontend</div><div class="flex flex-wrap gap-2"><span class="skill-pill">React</span><span class="skill-pill">Vite</span><span class="skill-pill">Tailwind CSS</span><span class="skill-pill">HTML/CSS</span></div></div>
+      <div><div class="skill-cat-title">Databases</div><div class="flex flex-wrap gap-2"><span class="skill-pill">PostgreSQL</span><span class="skill-pill">MySQL</span><span class="skill-pill">SQLite</span></div></div>
+      <div><div class="skill-cat-title">Tools</div><div class="flex flex-wrap gap-2"><span class="skill-pill">Git</span><span class="skill-pill">GitHub</span><span class="skill-pill">Postman</span><span class="skill-pill">VS Code</span></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ── -->
+<section id="projects" class="py-20 sm:py-28" style="background:linear-gradient(180deg,var(--amber-pale) 0%,var(--cream) 100%);">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="reveal mb-12 sm:mb-16">
+      <div class="section-label mb-4">Work</div>
+      <h2 class="section-title">Selected <em style="color:var(--amber);font-style:italic;">Projects</em></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for project in projects %}
+      <div class="project-card reveal flex flex-col">
+        <div class="text-4xl mb-3">{{ project.image_emoji }}</div>
+        <h3 class="font-bold text-base sm:text-lg mb-2" style="color:var(--ink);">{{ project.title }}</h3>
+        <p class="text-sm leading-relaxed mb-4 flex-1" style="color:var(--slate);">{{ project.description }}</p>
+        <div class="flex flex-wrap gap-1.5 mb-5">{% for t in project.get_tech_list %}<span class="tech-pill">{{ t }}</span>{% endfor %}</div>
+        <div class="flex gap-2 mt-auto flex-wrap">
+          {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest border rounded px-3 py-1.5 hover:bg-ink hover:text-cream transition-all" style="border-color:rgba(26,18,8,.2);color:var(--ink);">GitHub ↗</a>{% endif %}
+          {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest rounded px-3 py-1.5 transition-all" style="background:var(--amber);color:white;">Live ↗</a>{% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <!-- Static fallback -->
+      <div class="project-card reveal flex flex-col"><div class="text-4xl mb-3">🤖</div><h3 class="font-bold text-lg mb-2" style="color:var(--ink);">StudyBuddy</h3><p class="text-sm leading-relaxed mb-4 flex-1" style="color:var(--slate);">Full-stack AI study assistant with 5+ REST APIs, Groq LLaMA, rate limiting, CORS and structured JSON parsing.</p><div class="flex flex-wrap gap-1.5 mb-4"><span class="tech-pill">React</span><span class="tech-pill">Django REST</span><span class="tech-pill">PostgreSQL</span><span class="tech-pill">Groq</span></div><a href="https://github.com/ikramhamid2003" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest border rounded px-3 py-1.5 hover:bg-ink hover:text-cream transition-all self-start" style="border-color:rgba(26,18,8,.2);color:var(--ink);">GitHub ↗</a></div>
+      <div class="project-card reveal flex flex-col"><div class="text-4xl mb-3">🧭</div><h3 class="font-bold text-lg mb-2" style="color:var(--ink);">Career Navigator</h3><p class="text-sm leading-relaxed mb-4 flex-1" style="color:var(--slate);">AI career counseling with VotingClassifier ensemble, 43 RIASEC features, 12K samples, SSE streaming &amp; skills gap API.</p><div class="flex flex-wrap gap-1.5 mb-4"><span class="tech-pill">Django REST</span><span class="tech-pill">scikit-learn</span><span class="tech-pill">React</span><span class="tech-pill">Neon.tech</span></div><a href="https://github.com/ikramhamid2003" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest border rounded px-3 py-1.5 hover:bg-ink hover:text-cream transition-all self-start" style="border-color:rgba(26,18,8,.2);color:var(--ink);">GitHub ↗</a></div>
+      <div class="project-card reveal flex flex-col"><div class="text-4xl mb-3">🥽</div><h3 class="font-bold text-lg mb-2" style="color:var(--ink);">AR Robot Assembly Kit</h3><p class="text-sm leading-relaxed mb-4 flex-1" style="color:var(--slate);">AR-based 3D robot assembly with drag-and-drop, physics snapping, progress tracking and scoring for STEM education.</p><div class="flex flex-wrap gap-1.5 mb-4"><span class="tech-pill">Unity</span><span class="tech-pill">AR Foundation</span><span class="tech-pill">C#</span></div><a href="https://github.com/ikramhamid2003" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest border rounded px-3 py-1.5 hover:bg-ink hover:text-cream transition-all self-start" style="border-color:rgba(26,18,8,.2);color:var(--ink);">GitHub ↗</a></div>
+      <div class="project-card reveal flex flex-col"><div class="text-4xl mb-3">🌐</div><h3 class="font-bold text-lg mb-2" style="color:var(--ink);">Django Portfolio</h3><p class="text-sm leading-relaxed mb-4 flex-1" style="color:var(--slate);">Futuristic portfolio with 8 DB models, full admin panel, analytics dashboard, and PowerShell automation for Windows.</p><div class="flex flex-wrap gap-1.5 mb-4"><span class="tech-pill">Django</span><span class="tech-pill">Tailwind</span><span class="tech-pill">SQLite</span><span class="tech-pill">PowerShell</span></div><a href="https://github.com/ikramhamid2003" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest border rounded px-3 py-1.5 hover:bg-ink hover:text-cream transition-all self-start" style="border-color:rgba(26,18,8,.2);color:var(--ink);">GitHub ↗</a></div>
+      <div class="project-card reveal flex flex-col"><div class="text-4xl mb-3">📊</div><h3 class="font-bold text-lg mb-2" style="color:var(--ink);">Responsive Portfolio v1</h3><p class="text-sm leading-relaxed mb-4 flex-1" style="color:var(--slate);">Clean, fully responsive static site with smooth animations and project showcases.</p><div class="flex flex-wrap gap-1.5 mb-4"><span class="tech-pill">HTML</span><span class="tech-pill">CSS</span><span class="tech-pill">JavaScript</span></div><a href="https://github.com/ikramhamid2003" target="_blank" class="mono text-xs font-semibold uppercase tracking-widest border rounded px-3 py-1.5 hover:bg-ink hover:text-cream transition-all self-start" style="border-color:rgba(26,18,8,.2);color:var(--ink);">GitHub ↗</a></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience" class="py-20 sm:py-28 max-w-6xl mx-auto px-5 sm:px-8">
+  <div class="reveal mb-12 sm:mb-16">
+    <div class="section-label mb-4">Career</div>
+    <h2 class="section-title">Internship <em style="color:var(--amber);font-style:italic;">Experience</em></h2>
+  </div>
+
+  <div class="relative pl-8 sm:pl-10">
+    <div class="timeline-line"></div>
+    {% for exp in experiences %}
+    <div class="reveal mb-8 flex items-start gap-4 sm:gap-6">
+      <div class="timeline-dot mt-6" style="margin-left:-24px;flex-shrink:0;"></div>
+      <div class="exp-card flex-1">
+        <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
+          <div>
+            <h3 class="font-bold text-base sm:text-lg" style="color:var(--ink);">{{ exp.role }}</h3>
+            <p class="font-medium text-sm" style="color:var(--amber);">{{ exp.company }}</p>
+            {% if exp.location %}<p class="text-xs mt-0.5" style="color:var(--slate);">{{ exp.location }}</p>{% endif %}
+          </div>
+          <span class="badge text-xs">{{ exp.start_date }} – {{ exp.end_date }}</span>
+        </div>
+        <ul class="space-y-1.5">
+          {% for bullet in exp.get_bullets %}
+          <li class="flex gap-2.5 text-xs sm:text-sm" style="color:var(--slate);">
+            <span style="color:var(--amber);flex-shrink:0;">→</span>{{ bullet }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% empty %}
+    <div class="reveal mb-8 flex items-start gap-4 sm:gap-6">
+      <div class="timeline-dot mt-6" style="margin-left:-24px;flex-shrink:0;"></div>
+      <div class="exp-card flex-1">
+        <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
+          <div><h3 class="font-bold text-lg" style="color:var(--ink);">Machine Learning Intern</h3><p class="font-medium text-sm" style="color:var(--amber);">Edunet Foundation (AICTE & IBM SkillsBuild)</p></div>
+          <span class="badge">Jan 2026 – Feb 2026</span>
+        </div>
+        <ul class="space-y-1.5">
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Developed backend APIs for an AI-powered Study Assistant using Django REST Framework</li>
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Implemented serializer-based validation and structured JSON response handling</li>
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Evaluated LLM outputs and improved response reliability using prompt engineering</li>
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Enhanced consistency and performance of AI-generated responses</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reveal mb-8 flex items-start gap-4 sm:gap-6">
+      <div class="timeline-dot mt-6" style="margin-left:-24px;flex-shrink:0;"></div>
+      <div class="exp-card flex-1">
+        <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
+          <div><h3 class="font-bold text-lg" style="color:var(--ink);">Web Development Intern</h3><p class="font-medium text-sm" style="color:var(--amber);">AspiraSys Pvt. Ltd.</p><p class="text-xs mt-0.5" style="color:var(--slate);">Chennai, India</p></div>
+          <span class="badge">Jul 2025 – Aug 2025</span>
+        </div>
+        <ul class="space-y-1.5">
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Assisted in frontend development tasks using modern web technologies</li>
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Applied AI-assisted tools to support development and improve coding efficiency</li>
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Gained exposure to deployment processes and testing workflows</li>
+          <li class="flex gap-2.5 text-sm" style="color:var(--slate);"><span style="color:var(--amber);flex-shrink:0;">→</span>Collaborated using Git for version control and project management</li>
+        </ul>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Education -->
+  <div class="reveal mt-16">
+    <div class="section-label mb-4">Education</div>
+    <div class="exp-card max-w-2xl">
+      <div class="flex flex-wrap justify-between items-start gap-4">
+        <div>
+          <div class="text-3xl mb-2">🎓</div>
+          <h3 class="font-bold text-base sm:text-lg" style="color:var(--ink);">B.E. Computer Science Engineering</h3>
+          <p class="font-medium text-sm" style="color:var(--amber);">Aalim Muhammed Salegh College of Engineering</p>
+          <p class="text-xs mt-1" style="color:var(--slate);">Chennai, Tamil Nadu</p>
+        </div>
+        <div class="text-right">
+          <span class="badge">Expected May 2026</span>
+          <div class="mt-3">
+            <span class="serif text-3xl" style="color:var(--ink);">7.56</span>
+            <span class="text-sm ml-1" style="color:var(--slate);">/ 10 CGPA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section id="skills" class="py-20 sm:py-28" style="background:var(--amber-pale);">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="reveal mb-12 sm:mb-16">
+      <div class="section-label mb-4">Expertise</div>
+      <h2 class="section-title">Technical <em style="color:var(--amber);font-style:italic;">Skills</em></h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      {% for cat, skill_list in skill_categories.items %}
+      <div class="reveal"><div class="skill-cat-title">{{ cat }}</div><div class="flex flex-wrap gap-2">{% for s in skill_list %}<span class="skill-pill">{{ s.name }}</span>{% endfor %}</div></div>
+      {% empty %}
+      <div class="reveal"><div class="skill-cat-title">Languages</div><div class="flex flex-wrap gap-2"><span class="skill-pill">Python</span><span class="skill-pill">JavaScript</span><span class="skill-pill">Java</span><span class="skill-pill">C</span></div></div>
+      <div class="reveal"><div class="skill-cat-title">Backend</div><div class="flex flex-wrap gap-2"><span class="skill-pill">Django REST Framework</span><span class="skill-pill">REST APIs</span><span class="skill-pill">API Design</span></div></div>
+      <div class="reveal"><div class="skill-cat-title">AI / ML</div><div class="flex flex-wrap gap-2"><span class="skill-pill">LLM Integration</span><span class="skill-pill">Prompt Engineering</span><span class="skill-pill">Groq API</span><span class="skill-pill">scikit-learn</span></div></div>
+      <div class="reveal"><div class="skill-cat-title">Frontend</div><div class="flex flex-wrap gap-2"><span class="skill-pill">React</span><span class="skill-pill">Vite</span><span class="skill-pill">Tailwind CSS</span><span class="skill-pill">HTML/CSS</span></div></div>
+      <div class="reveal"><div class="skill-cat-title">Databases</div><div class="flex flex-wrap gap-2"><span class="skill-pill">PostgreSQL</span><span class="skill-pill">MySQL</span><span class="skill-pill">SQLite</span></div></div>
+      <div class="reveal"><div class="skill-cat-title">Tools</div><div class="flex flex-wrap gap-2"><span class="skill-pill">Git</span><span class="skill-pill">GitHub</span><span class="skill-pill">Postman</span><span class="skill-pill">VS Code</span></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── CERTS ── -->
+<section id="certs" class="py-20 sm:py-28 max-w-6xl mx-auto px-5 sm:px-8">
+  <div class="reveal mb-12 sm:mb-16">
+    <div class="section-label mb-4">Credentials</div>
+    <h2 class="section-title">Certifi<em style="color:var(--amber);font-style:italic;">cations</em></h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" style="overflow:visible;">
+    {% for cert in certifications %}
+    <div class="cert-card reveal">
+      {% if cert.image %}
+        <div class="cert-thumb-wrap"
+             data-img="{{ cert.image.url }}"
+             data-title="{{ cert.title }}">
+          <img src="{{ cert.image.url }}" alt="{{ cert.title }}" class="cert-thumb"/>
+        </div>
+      {% else %}
+        <div class="cert-icon">{{ cert.icon_emoji }}</div>
+      {% endif %}
+      <div class="flex-1">
+        <h3 class="font-bold text-sm sm:text-base mb-1" style="color:var(--ink);">{{ cert.title }}</h3>
+        <p class="text-xs sm:text-sm font-medium" style="color:var(--amber);">{{ cert.issuer }}</p>
+        {% if cert.date %}<p class="mono text-xs mt-1" style="color:var(--slate);">{{ cert.date }}</p>{% endif %}
+        {% if cert.credential_url %}<a href="{{ cert.credential_url }}" target="_blank" class="text-xs mt-2 inline-block" style="color:var(--rust);">View Credential ↗</a>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="contact-bg py-20 sm:py-28">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="reveal mb-12 sm:mb-16">
+      <div class="section-label mb-4" style="color:var(--amber-l);">Say Hello</div>
+      <h2 class="section-title" style="color:var(--cream);">Let's <em style="color:var(--amber-l);font-style:italic;">Connect</em></h2>
+      <p class="mt-4 max-w-md text-sm sm:text-base" style="color:rgba(245,240,232,.55);">Open to backend engineering roles, internship opportunities, or just a good conversation about AI and software.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+      <div class="reveal space-y-4">
+        <a href="mailto:ikramhamid4567@gmail.com" class="ci-item"><div class="ci-icon">📧</div><span>ikramhamid4567@gmail.com</span></a>
+        <a href="tel:+919514729395" class="ci-item"><div class="ci-icon">📞</div><span>+91 95147 29395</span></a>
+        <div class="ci-item"><div class="ci-icon">📍</div><span>Chennai, India</span></div>
+        <a href="https://linkedin.com/in/ikramhamid4567" target="_blank" class="ci-item"><div class="ci-icon">🔗</div><span>LinkedIn Profile</span></a>
+        <a href="https://github.com/ikramhamid2003" target="_blank" class="ci-item"><div class="ci-icon">🐙</div><span>GitHub Profile</span></a>
+        <div class="pt-8 mt-4 border-t" style="border-color:rgba(255,255,255,.1);">
+          <p class="serif text-xl sm:text-2xl italic" style="color:rgba(245,240,232,.65);">"Code is craft. Build with intention."</p>
+        </div>
+      </div>
+      <div class="reveal">
+        <form id="contact-form" action="/contact/" method="POST" class="space-y-4">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label class="input-label">Name</label><input type="text" name="name" placeholder="Your name" class="input-field" required/></div>
+            <div><label class="input-label">Email</label><input type="email" name="email" placeholder="your@email.com" class="input-field" required/></div>
+          </div>
+          <div><label class="input-label">Subject</label><input type="text" name="subject" placeholder="What's this about?" class="input-field" required/></div>
+          <div><label class="input-label">Message</label><textarea name="message" rows="5" placeholder="Tell me more..." class="input-field resize-none" required></textarea></div>
+          <button type="submit" id="submit-btn" style="width:100%;background:var(--amber);color:white;font-weight:600;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:opacity .2s;font-family:'Outfit',sans-serif;">
+            Send Message →
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer style="background:var(--ink);border-top:1px solid rgba(255,255,255,.06);">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-6 sm:py-8 flex flex-col sm:flex-row flex-wrap justify-between items-center gap-4 text-center sm:text-left">
+    <div class="serif text-xl" style="color:var(--amber);">Ikram Hamid P K</div>
+    <div class="mono text-xs" style="color:rgba(245,240,232,.3);">© 2026 · Django + Tailwind · Chennai, India</div>
+    <div class="flex gap-6">
+      <a href="www.linkedin.com/in/ikramhamid4567" target="_blank" class="text-sm transition-colors" style="color:rgba(245,240,232,.4);">LinkedIn</a>
+      <a href="https://github.com/ikramhamid2003" target="_blank" class="text-sm transition-colors" style="color:rgba(245,240,232,.4);">GitHub</a>
+      <a href="mailto:ikramhamid4567@gmail.com" class="text-sm transition-colors" style="color:rgba(245,240,232,.4);">Email</a>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+// ── Mobile menu ──
+let menuOpen = false;
+function toggleMobile(){
+  menuOpen = !menuOpen;
+  document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
+  const hl1 = document.getElementById('hl1');
+  const hl2 = document.getElementById('hl2');
+  const hl3 = document.getElementById('hl3');
+  if(menuOpen){
+    hl1.style.transform = 'translateY(7px) rotate(45deg)';
+    hl2.style.opacity   = '0';
+    hl3.style.transform = 'translateY(-7px) rotate(-45deg)';
+  } else {
+    hl1.style.transform = hl3.style.transform = '';
+    hl2.style.opacity = '1';
+  }
+}
+
+// ── Scroll reveal ──
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if(e.isIntersecting){
+      setTimeout(() => e.target.classList.add('visible'), i * 60);
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.1});
+document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+
+// ── Active nav ──
+const sections = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 80) cur = s.id; });
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.style.color = l.getAttribute('href') === `#${cur}` ? 'var(--amber)' : '';
+  });
+}, {passive: true});
+
+// ── Toast ──
+function showToast(msg, ok=true){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderLeftColor = ok ? 'var(--amber)' : 'var(--rust)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Contact form AJAX ──
+document.getElementById('contact-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  try {
+    const res  = await fetch('/contact/', {method:'POST', body: new FormData(e.target), headers:{'X-Requested-With':'XMLHttpRequest'}});
+    const data = await res.json();
+    if(data.success){ showToast('✓ Message sent! I\'ll be in touch soon.'); e.target.reset(); }
+    else showToast('Please fill in all fields.', false);
+  } catch { showToast('Something went wrong.', false); }
+  finally { btn.textContent = 'Send Message →'; btn.disabled = false; }
+});
+
+// ── Smooth scroll with offset ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); window.scrollTo({top: t.offsetTop - 60, behavior:'smooth'}); }
+  });
+});
+
+// ── Track time on page (ping every 30s) ──
+let seconds = 0;
+setInterval(() => {
+  seconds += 30;
+  fetch('/track-time/', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','X-CSRFToken': '{{ csrf_token }}'},
+    body: JSON.stringify({seconds})
+  }).catch(() => {});
+}, 30000);
+// Also send on tab close / navigate away
+window.addEventListener('beforeunload', () => {
+  navigator.sendBeacon('/track-time/', JSON.stringify({seconds}));
+});
+
+// ── Event Tracking ──
+const CSRF = '{{ csrf_token }}';
+
+function sendEvent(payload) {
+  fetch('/track-event/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+// Get current visible section
+function getCurrentSection() {
+  let current = 'hero';
+  document.querySelectorAll('section[id]').forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  return current;
+}
+
+// Track all clicks
+document.addEventListener('click', e => {
+  const el = e.target.closest('a, button, [data-track]');
+  if (!el) return;
+  sendEvent({
+    type:         'click',
+    element:      (el.innerText || el.getAttribute('aria-label') || el.className).trim().slice(0, 100),
+    element_type: el.tagName.toLowerCase() === 'a' ? 'link' : 'button',
+    target_url:   el.href || '',
+    section:      getCurrentSection(),
+    x_percent:    Math.round((e.clientX / window.innerWidth) * 100),
+    y_percent:    Math.round((e.clientY / window.innerHeight) * 100),
+  });
+});
+
+// Track section views
+let sectionTimers = {};
+let currentSection = '';
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const id = entry.target.id;
+    if (entry.isIntersecting) {
+      sectionTimers[id] = Date.now();
+      currentSection = id;
+    } else if (sectionTimers[id]) {
+      const spent = Math.round((Date.now() - sectionTimers[id]) / 1000);
+      if (spent > 1) {
+        sendEvent({ type: 'section', section: id, time_spent: spent });
+      }
+      delete sectionTimers[id];
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
+
+// Detect DevTools open
+let devToolsOpen = false;
+const devToolsCheck = () => {
+  const threshold = 160;
+  const widthDiff  = window.outerWidth  - window.innerWidth  > threshold;
+  const heightDiff = window.outerHeight - window.innerHeight > threshold;
+  if ((widthDiff || heightDiff) && !devToolsOpen) {
+    devToolsOpen = true;
+    sendEvent({ type: 'devtools', method: 'resize' });
+  } else if (!widthDiff && !heightDiff) {
+    devToolsOpen = false;
+  }
+};
+setInterval(devToolsCheck, 1500);
+
+// Detect F12 / Ctrl+Shift+I / Ctrl+Shift+J
+document.addEventListener('keydown', e => {
+  if (e.key === 'F12' ||
+     (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key))) {
+    sendEvent({ type: 'devtools', method: e.key === 'F12' ? 'f12' : 'keyboard' });
+  }
+});
+
+</script>
+</body>
+</html>
