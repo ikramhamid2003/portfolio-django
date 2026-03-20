@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv()
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,8 +54,9 @@ WSGI_APPLICATION = 'portfolio_site.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600
+        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
+        conn_max_age=600,
+        ssl_require=True,
     )
 }
 
@@ -72,10 +76,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # EMAIL
-EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST          = 'smtp.gmail.com'
-EMAIL_PORT          = 587
-EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', 'ikramhamid4567@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'jzldrynigyvbermr')
+EMAIL_BACKEND          = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST             = 'smtp.gmail.com'
+EMAIL_PORT             = 587
+EMAIL_USE_TLS          = True
+EMAIL_HOST_USER        = os.environ.get('EMAIL_HOST_USER', 'ikramhamid4567@gmail.com')
+EMAIL_HOST_PASSWORD    = os.environ.get('EMAIL_HOST_PASSWORD', 'your_app_password_here')
 CONTACT_RECEIVER_EMAIL = os.environ.get('CONTACT_RECEIVER_EMAIL', 'ikramhamid4567@gmail.com')
+
+# AUTH
+LOGIN_URL             = '/accounts/login/'
+LOGIN_REDIRECT_URL    = '/analytics/'
+LOGOUT_REDIRECT_URL   = '/'

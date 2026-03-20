@@ -523,7 +523,12 @@ document.getElementById('contact-form').addEventListener('submit', async e => {
   const btn = document.getElementById('submit-btn');
   btn.textContent = 'Sending…'; btn.disabled = true;
   try {
-    const res  = await fetch('/contact/', {method:'POST', body: new FormData(e.target), headers:{'X-Requested-With':'XMLHttpRequest'}});
+    const formData = new FormData(e.target);
+    const res  = await fetch('/contact/', {
+      method: 'POST',
+      body: formData,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
     const data = await res.json();
     if(data.success){ showToast('✓ Message sent! I\'ll be in touch soon.'); e.target.reset(); }
     else showToast('Please fill in all fields.', false);
@@ -539,23 +544,38 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-// ── Track time on page (ping every 30s) ──
+// Track time on page (ping every 30s)
 let seconds = 0;
 setInterval(() => {
   seconds += 30;
   fetch('/track-time/', {
     method: 'POST',
-    headers: {'Content-Type':'application/json','X-CSRFToken': '{{ csrf_token }}'},
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
     body: JSON.stringify({seconds})
   }).catch(() => {});
 }, 30000);
-// Also send on tab close / navigate away
+
 window.addEventListener('beforeunload', () => {
   navigator.sendBeacon('/track-time/', JSON.stringify({seconds}));
 });
 
 // ── Event Tracking ──
-const CSRF = '{{ csrf_token }}';
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    document.cookie.split(';').forEach(cookie => {
+      const c = cookie.trim();
+      if (c.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(c.substring(name.length + 1));
+      }
+    });
+  }
+  return cookieValue;
+}
+const CSRF = getCookie('csrftoken');
 
 function sendEvent(payload) {
   fetch('/track-event/', {

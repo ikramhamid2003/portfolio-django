@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count, Avg, Sum
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -40,7 +41,9 @@ def contact(request):
         subject = request.POST.get('subject', '').strip()
         message = request.POST.get('message', '').strip()
         if name and email and subject and message:
-            ContactMessage.objects.create(name=name, email=email, subject=subject, message=message)
+            ContactMessage.objects.create(
+                name=name, email=email, subject=subject, message=message
+            )
             try:
                 email_body = f"""
 New contact form submission from your portfolio.
@@ -74,7 +77,7 @@ Sent via portfolio contact form
         return redirect('/')
     return redirect('/')
 
-
+@csrf_exempt
 def track_time(request):
     if request.method == 'POST':
         from .analytics import session_key, get_client_ip
@@ -89,7 +92,7 @@ def track_time(request):
             pass
     return JsonResponse({'ok': False})
 
-
+@csrf_exempt
 def track_event(request):
     if request.method == 'POST':
         from .analytics import session_key, get_client_ip
@@ -128,12 +131,12 @@ def track_event(request):
     return JsonResponse({'ok': False})
 
 
-@staff_member_required
+@login_required
 def analytics_dashboard(request):
     now   = timezone.now()
     day30 = now - timedelta(days=30)
     day7  = now - timedelta(days=7)
-    visitors = VisitorLog.objects.filter(is_bot=False)
+    visitors       = VisitorLog.objects.filter(is_bot=False)
     total_visitors = visitors.count()
     last30         = visitors.filter(first_seen__gte=day30).count()
     last7          = visitors.filter(first_seen__gte=day7).count()

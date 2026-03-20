@@ -31,71 +31,49 @@
     .bar-fill{background:var(--amber);border-radius:999px;height:5px;transition:width .8s ease;}
     .online-dot{width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .divider{height:1px;background:var(--border);margin:20px 0;}
-    /* scrollbar */
+    .divider{height:1px;background:var(--border);margin:16px 0;}
     ::-webkit-scrollbar{width:4px;height:4px;}
     ::-webkit-scrollbar-track{background:var(--ink);}
     ::-webkit-scrollbar-thumb{background:var(--amber);border-radius:2px;}
-    @media(max-width:640px){.stat-val{font-size:1.5rem;}.card{padding:14px;}.hide-mobile{display:none;}}
+    @media(max-width:640px){.stat-val{font-size:1.5rem;}.card{padding:14px;}}
   </style>
 </head>
 <body>
 
-<!-- ── Topbar ── -->
+<!-- Topbar -->
 <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:20;">
-  
-    <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:10;">
-  <div style="display:flex;align-items:center;gap:16px;">
-    <a href="/" class="back">← Portfolio</a>
-    <div style="width:1px;height:16px;background:var(--border);"></div>
-    <span style="font-weight:600;font-size:.95rem;">Analytics Dashboard</span>
-    <span class="mono" style="font-size:.7rem;color:var(--muted);">ikramhamidpk.dev</span>
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+    <a href="/" style="font-size:.78rem;color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;transition:color .2s;" onmouseover="this.style.color='var(--amber)'" onmouseout="this.style.color='var(--muted)'">← Portfolio</a>
+    <div style="width:1px;height:14px;background:var(--border);"></div>
+    <span style="font-weight:600;font-size:.9rem;">Analytics</span>
+    <span class="mono" style="font-size:.65rem;color:var(--muted);">ikramhamidpk.dev</span>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;font-size:.8rem;">
-    <span class="online-dot"></span>
-    <span style="color:var(--muted);">Live tracking active</span>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);">
+      <span class="online-dot"></span> Live · auto-refreshes 60s
+    </div>
+    <div style="width:1px;height:14px;background:var(--border);"></div>
+    <span style="font-size:.75rem;color:var(--muted);">{{ request.user.username }}</span>
+    <a href="/accounts/logout/"
+       style="font-size:.72rem;font-family:'DM Mono',monospace;background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.25);padding:4px 12px;border-radius:6px;text-decoration:none;transition:all .2s;"
+       onmouseover="this.style.background='rgba(239,68,68,.2)'"
+       onmouseout="this.style.background='rgba(239,68,68,.1)'">Logout</a>
   </div>
-</div>
-  
 </div>
 
 <div style="max-width:1200px;margin:0 auto;padding:20px 16px;">
 
-  <!-- ── KPI Cards ── -->
+  <!-- KPI Cards -->
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;">
-    <div class="card">
-      <div class="stat-val" style="color:var(--amber);">{{ total_visitors }}</div>
-      <div class="stat-lbl">Total Visitors</div>
-      <div class="stat-sub">All-time unique</div>
-    </div>
-    <div class="card">
-      <div class="stat-val" style="color:var(--blue);">{{ last30 }}</div>
-      <div class="stat-lbl">Last 30 Days</div>
-      <div class="stat-sub">This month</div>
-    </div>
-    <div class="card">
-      <div class="stat-val" style="color:var(--green);">{{ last7 }}</div>
-      <div class="stat-lbl">Last 7 Days</div>
-      <div class="stat-sub">This week</div>
-    </div>
-    <div class="card">
-      <div class="stat-val" style="color:var(--purple);">{{ total_views }}</div>
-      <div class="stat-lbl">Page Views</div>
-      <div class="stat-sub">Total cumulative</div>
-    </div>
-    <div class="card">
-      <div class="stat-val" style="color:var(--amber-l);">{{ avg_time_display }}</div>
-      <div class="stat-lbl">Avg Time on Site</div>
-      <div class="stat-sub">Per session</div>
-    </div>
-    <div class="card">
-      <div class="stat-val" style="color:var(--green);">{{ contacts_count }}</div>
-      <div class="stat-lbl">Messages</div>
-      <div class="stat-sub">Via contact form</div>
-    </div>
+    <div class="card"><div class="stat-val" style="color:var(--amber);">{{ total_visitors }}</div><div class="stat-lbl">Total Visitors</div><div class="stat-sub">All-time unique</div></div>
+    <div class="card"><div class="stat-val" style="color:var(--blue);">{{ last30 }}</div><div class="stat-lbl">Last 30 Days</div><div class="stat-sub">This month</div></div>
+    <div class="card"><div class="stat-val" style="color:var(--green);">{{ last7 }}</div><div class="stat-lbl">Last 7 Days</div><div class="stat-sub">This week</div></div>
+    <div class="card"><div class="stat-val" style="color:var(--purple);">{{ total_views }}</div><div class="stat-lbl">Page Views</div><div class="stat-sub">Total cumulative</div></div>
+    <div class="card"><div class="stat-val" style="color:var(--amber-l);">{{ avg_time }}s</div><div class="stat-lbl">Avg Time on Site</div><div class="stat-sub">Per session</div></div>
+    <div class="card"><div class="stat-val" style="color:var(--green);">{{ contacts.count }}</div><div class="stat-lbl">Messages</div><div class="stat-sub">Via contact form</div></div>
   </div>
 
-  <!-- ── Chart Row ── -->
+  <!-- Chart Row -->
   <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px;" id="chart-row">
     <div class="card">
       <div class="sec-title">Daily Visitors — Last 14 Days</div>
@@ -120,9 +98,8 @@
     </div>
   </div>
 
-  <!-- ── Country + Browser + OS ── -->
+  <!-- Country + Browser + OS -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;" id="bottom-row">
-    <!-- Countries -->
     <div class="card" style="overflow-x:auto;">
       <div class="sec-title">Top Countries</div>
       {% if by_country %}
@@ -131,14 +108,9 @@
         <tbody>
           {% for c in by_country %}
           <tr>
-            <td style="font-weight:500;">
-              {{ c.country|default:"Unknown" }}
-              {% if c.country_code %}<span class="mono" style="font-size:.62rem;color:var(--muted);"> ({{ c.country_code }})</span>{% endif %}
-            </td>
+            <td style="font-weight:500;">{{ c.country|default:"Unknown" }}{% if c.country_code %} <span class="mono" style="font-size:.62rem;color:var(--muted);">({{ c.country_code }})</span>{% endif %}</td>
             <td class="mono" style="color:var(--amber);">{{ c.n }}</td>
-            <td style="min-width:80px;">
-              <div class="bar-wrap"><div class="bar-fill" data-width="{% if total_visitors %}{% widthratio c.n total_visitors 100 %}{% else %}0{% endif %}"></div></div>
-            </td>
+            <td style="min-width:80px;"><div class="bar-wrap"><div class="bar-fill" data-width="{% if total_visitors %}{% widthratio c.n total_visitors 100 %}{% else %}0{% endif %}"></div></div></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -148,7 +120,6 @@
       {% endif %}
     </div>
 
-    <!-- Browser + OS stacked -->
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div class="card" style="overflow-x:auto;">
         <div class="sec-title">Top Browsers</div>
@@ -171,7 +142,7 @@
     </div>
   </div>
 
-  <!-- ── Recent Visitors Table ── -->
+  <!-- Recent Visitors -->
   <div class="card" style="margin-bottom:20px;overflow-x:auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
       <div class="sec-title" style="margin-bottom:0;">Recent Visitors (Last 50)</div>
@@ -180,11 +151,7 @@
     {% if recent_list %}
     <table class="tbl" style="min-width:750px;">
       <thead>
-        <tr>
-          <th>#</th><th>IP Address</th><th>Location</th><th>Device</th>
-          <th>Browser / OS</th><th>Time Spent</th><th>Pages</th>
-          <th>First Seen</th><th>Referrer</th>
-        </tr>
+        <tr><th>#</th><th>IP Address</th><th>Location</th><th>Device</th><th>Browser / OS</th><th>Time Spent</th><th>Pages</th><th>First Seen</th><th>Referrer</th></tr>
       </thead>
       <tbody>
         {% for v in recent_list %}
@@ -192,9 +159,7 @@
           <td class="mono" style="color:var(--muted);font-size:.68rem;">{{ forloop.counter }}</td>
           <td class="mono" style="font-size:.75rem;color:var(--amber);">{{ v.ip_address|default:"—" }}</td>
           <td>
-            <div style="font-size:.78rem;font-weight:500;">
-              {% if v.city %}{{ v.city }}{% if v.country %}, {% endif %}{% endif %}{{ v.country|default:"Unknown" }}
-            </div>
+            <div style="font-size:.78rem;font-weight:500;">{% if v.city %}{{ v.city }}{% if v.country %}, {% endif %}{% endif %}{{ v.country|default:"Unknown" }}</div>
             {% if v.region %}<div style="font-size:.65rem;color:var(--muted);">{{ v.region }}</div>{% endif %}
           </td>
           <td><span class="badge badge-{{ v.device_type }}">{{ v.device_type }}</span></td>
@@ -205,9 +170,7 @@
           <td class="mono" style="color:var(--green);font-size:.75rem;">{{ v.time_spent_display }}</td>
           <td class="mono" style="color:var(--blue);font-size:.75rem;">{{ v.page_views }}</td>
           <td class="mono" style="font-size:.68rem;color:var(--muted);">{{ v.first_seen|date:"M d, H:i" }}</td>
-          <td style="font-size:.68rem;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            {% if v.referrer %}{{ v.referrer|truncatechars:28 }}{% else %}—{% endif %}
-          </td>
+          <td style="font-size:.68rem;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{% if v.referrer %}{{ v.referrer|truncatechars:28 }}{% else %}—{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -221,10 +184,10 @@
     {% endif %}
   </div>
 
-  <!-- ── Contact Messages ── -->
+  <!-- Contact Messages -->
   {% if contacts %}
   <div class="card" style="overflow-x:auto;margin-bottom:20px;">
-    <div class="sec-title">Contact Form Messages ({{ contacts_count }})</div>
+    <div class="sec-title">Contact Form Messages</div>
     <table class="tbl" style="min-width:500px;">
       <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Received</th></tr></thead>
       <tbody>
@@ -241,19 +204,16 @@
   </div>
   {% endif %}
 
-  <!-- Footer -->
   <div style="text-align:center;padding:16px 0;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--muted);">
     Ikram Hamid Portfolio Analytics · Admin Only · Auto-refreshes every 60s
   </div>
 </div>
 
 <script>
-// ── Bar widths ──
 document.querySelectorAll('.bar-fill[data-width]').forEach(el => {
   el.style.width = (el.dataset.width || 0) + '%';
 });
 
-// ── Line chart ──
 const labels = [{% for d in daily %}"{{ d.date }}"{% if not forloop.last %},{% endif %}{% endfor %}];
 const counts = [{% for d in daily %}{{ d.count }}{% if not forloop.last %},{% endif %}{% endfor %}];
 new Chart(document.getElementById('lineChart'), {
@@ -280,7 +240,6 @@ new Chart(document.getElementById('lineChart'), {
   }
 });
 
-// ── Donut chart ──
 const dLabels = [{% for d in by_device %}"{{ d.device_type }}"{% if not forloop.last %},{% endif %}{% endfor %}];
 const dCounts = [{% for d in by_device %}{{ d.n }}{% if not forloop.last %},{% endif %}{% endfor %}];
 if (dLabels.length) {
@@ -298,7 +257,6 @@ if (dLabels.length) {
   });
 }
 
-// ── Responsive grid collapse ──
 function responsive() {
   const w = window.innerWidth;
   document.getElementById('chart-row').style.gridTemplateColumns  = w < 700 ? '1fr' : '2fr 1fr';
@@ -306,8 +264,6 @@ function responsive() {
 }
 responsive();
 window.addEventListener('resize', responsive);
-
-// ── Auto-refresh ──
 setTimeout(() => location.reload(), 60000);
 </script>
 </body>
