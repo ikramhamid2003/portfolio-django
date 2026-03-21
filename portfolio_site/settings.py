@@ -12,6 +12,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-this')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://portfolio-django-production-cf1b.up.railway.app',
+    'https://ikramhamid.up.railway.app',
+    'https://www.ikramhamid.in',
+    'https://ikramhamid.in',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
