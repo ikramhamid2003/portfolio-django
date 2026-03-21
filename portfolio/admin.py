@@ -8,16 +8,17 @@ from .models import Project, Experience, Certification, Skill, ContactMessage, V
 
 @receiver(user_logged_in)
 def notify_admin_login(sender, request, user, **kwargs):
-    try:
-        ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR', 'Unknown')
-        ua = request.META.get('HTTP_USER_AGENT', 'Unknown')
-        referer = request.META.get('HTTP_REFERER', 'Direct')
-        from django.utils import timezone
-        time = timezone.now().strftime('%d %b %Y, %I:%M %p')
-
-        send_mail(
-            subject=f'[Portfolio Alert] Admin Login Detected',
-            message=f"""
+    import threading
+    def send_notification():
+        try:
+            ip = request.META.get('HTTP_X_FORWARDED_FOR', '').split(',')[0].strip() or request.META.get('REMOTE_ADDR', 'Unknown')
+            ua = request.META.get('HTTP_USER_AGENT', 'Unknown')
+            referer = request.META.get('HTTP_REFERER', 'Direct')
+            from django.utils import timezone
+            time = timezone.now().strftime('%d %b %Y, %I:%M %p')
+            send_mail(
+                subject='[Portfolio Alert] Admin Login Detected',
+                message=f"""
 Someone just logged into your portfolio admin panel.
 
 ─────────────────────────────────
@@ -30,16 +31,14 @@ Someone just logged into your portfolio admin panel.
 
 If this was not you, change your password immediately at:
 https://www.ikramhamid.in/admin/password_change/
-
-─────────────────────────────────
-Portfolio Admin Alert System
 """,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[settings.CONTACT_RECEIVER_EMAIL],
-            fail_silently=True,
-        )
-    except Exception as e:
-        print(f"[ADMIN LOGIN EMAIL ERROR] {e}")
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[settings.CONTACT_RECEIVER_EMAIL],
+                fail_silently=True,
+            )
+        except Exception as e:
+            print(f"[ADMIN LOGIN EMAIL ERROR] {e}")
+    threading.Thread(target=send_notification, daemon=True).start()
 
 
 @admin.register(Project)
